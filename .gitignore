@@ -143,3 +143,6 @@ cython_debug/
 
 # yaml for secure
 accounts.yaml
+
+# text files
+*.txt
