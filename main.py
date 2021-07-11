@@ -23,7 +23,9 @@ if __name__ == '__main__':
     yesterday_start = yesterday.replace(hour=0, minute=0, second=0)
     yesterday_end = yesterday.replace(hour=23, minute=59, second=59)
 
-    driver = webdriver.Chrome(executable_path=DRIVER_PATH)
+    options = webdriver.ChromeOptions()
+    options.add_experimental_option("excludeSwitches", ["enable-logging"])
+    driver = webdriver.Chrome(executable_path=DRIVER_PATH, options=options)
     driver.implicitly_wait(30)
 
     driver.get(url=URL)
@@ -69,4 +71,4 @@ if __name__ == '__main__':
         f.close()
         driver.get(url=URL)
 
-    driver.close()
+    driver.quit()
