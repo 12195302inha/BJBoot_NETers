@@ -1,15 +1,15 @@
 import datetime
-
-from selenium import webdriver
+import os
 from pathlib import Path
 
 import yaml
-import os
+from selenium import webdriver
 
 if __name__ == '__main__':
     BASE_DIR = Path(__file__).resolve().parent.parent.parent
     YAML_PATH = os.path.join(BASE_DIR, 'accounts.yaml')
-    RESULT_PATH = os.path.join(BASE_DIR, '네터스 백준 인증 {0}.txt'.format(datetime.datetime.now().strftime("%Y-%m-%d %H%M%S")))
+    RESULT_PATH = os.path.join(BASE_DIR,
+                               '네터스 백준 인증 {0}.txt'.format(datetime.datetime.now().strftime("%Y-%m-%d %H%M%S")))
     DRIVER_PATH = os.path.join(BASE_DIR, 'chromedriver.exe')
 
     URL = 'https://www.acmicpc.net/group/member/10895'
@@ -22,6 +22,9 @@ if __name__ == '__main__':
     yesterday = datetime.datetime.now() - datetime.timedelta(days=1)
     yesterday_start = yesterday.replace(hour=0, minute=0, second=0)
     yesterday_end = yesterday.replace(hour=23, minute=59, second=59)
+
+    with open(RESULT_PATH, 'w') as f:
+        f.write(yesterday.strftime("%Y년 %m월 %d일 네터스 백준 인증 목록\n\n"))
 
     options = webdriver.ChromeOptions()
     options.add_experimental_option("excludeSwitches", ["enable-logging"])
@@ -59,13 +62,14 @@ if __name__ == '__main__':
                 problem_info = list(map(str, problem.text.split()))
 
                 # 제출 번호와 문제만 가져오기
-                problem_info = [problem_info[0], problem_info[2]]
+                problem_info = [problem_info[0], problem_info[2], problem_solve_time]
 
                 # 겹치는 문제 제거
                 if problem_info[1] not in problem_number:
                     problem_number.append(problem_info[1])
                     solve_count += 1
-                    f.write('제출 번호: {0}, 문제: {1}\n'.format(problem_info[0], problem_info[1]))
+                    f.write(
+                        '제출 번호: {0}, 문제: {1}, 제출 날짜: {2}\n'.format(problem_info[0], problem_info[1], problem_info[2]))
 
         f.write("총 개수: " + str(solve_count) + "\n\n")
         f.close()
